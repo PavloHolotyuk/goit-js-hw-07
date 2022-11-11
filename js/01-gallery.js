@@ -1,32 +1,43 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const gallaryElements = document.querySelector(".gallery");
+console.log(galleryItems);
 
-const gallery = galleryItems
-  .map(
-    (img) =>
-      `<div class="gallery__item"><a class="gallery__link" href="${img.original}"><img class="gallery__image" src="${img.preview}" data-source="${img.original}" alt="${img.description}"/></a></div>`
-  )
-  .join("");
-
-gallaryElements.innerHTML = gallery;
-
-gallaryElements.addEventListener("click", openImg);
+const galleryList = document.querySelector(".gallery");
 
 let instance;
 
-function openImg(event) {
+galleryList.insertAdjacentHTML("beforeend", galaryItem(galleryItems));
+
+function galaryItem(item) {
+  return item
+    .map(
+      (img) =>
+        `<div class="gallery__item"><a class="gallery__link" href="${img.original}"><img class="gallery__image" src="${img.preview}" data-source="${img.original}" alt="${img.description}"/></a></div>`
+    )
+    .join("");
+}
+
+function imgOpen(event) {
+  instance = basicLightbox.create(
+    `
+         <img src="${event.dataset.source}" width="800" height="600">
+    `
+  );
+
+  instance.show();
+}
+
+galleryList.addEventListener("click", onElement);
+
+function onElement(event) {
   event.preventDefault();
-  if (event.target.nodeName === "DIV") {
+
+  if (event.target.nodeName !== "IMG") {
     return;
   }
-  instance = basicLightbox.create(`
-    <div class="modal">
-        <img src=${event.target.dataset.source} width="80%" style="margin: auto; display: block"> 
-    </div>
-`);
-  instance.show();
+  imgOpen(event.target);
+
   document.addEventListener("keydown", closeModal);
 }
 
